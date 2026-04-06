@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOAP Note Writing Coach — DCITH Phase 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:   #0f1a2e;
+  --navy2:  #1a2a45;
+  --gold:   #c49a2a;
+  --goldl:  #fdf5e0;
+  --cream:  #f8f5ef;
+  --white:  #ffffff;
+  --dark:   #1c1c1c;
+  --gray:   #5a5a5a;
+  --lgray:  #eeebe5;
+  --border: #ddd9d0;
+  --w4:     #7a1a1a;
+  --w4l:    #fdf0f0;
+  --w4m:    #b83a2a;
+  --w5:     #1a3560;
+  --w5l:    #eef2fb;
+  --w5m:    #2e64b0;
+  --w6:     #1a4f2a;
+  --w6l:    #eef8f0;
+  --w6m:    #2d8045;
+  --correct:#166534;
+  --correctbg:#dcfce7;
+  --wrong:  #991b1b;
+  --wrongbg:#fee2e2;
+  --warn:   #92400e;
+  --warnbg: #fef3c7;
+  --shadow: 0 2px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 6px 32px rgba(0,0,0,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Source Serif 4',serif;
+  background:var(--cream);
+  color:var(--dark);
+  font-size:16px;
+  line-height:1.7;
+}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--navy);
+  color:#fff;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 20px rgba(0,0,0,0.35);
+}
+.header-inner{
+  max-width:1100px;margin:0 auto;
+  padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.header-brand{
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem;color:var(--gold);
+}
+.header-sub{font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:2px;}
+.header-badge{
+  background:var(--gold);color:var(--navy);
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;font-weight:500;
+  padding:4px 12px;border-radius:20px;white-space:nowrap;
+  letter-spacing:0.05em;
+}
+
+/* ── TAB NAV ── */
+.tab-bar{
+  display:flex;
+  background:rgba(255,255,255,0.05);
+  border-top:1px solid rgba(255,255,255,0.08);
+  overflow-x:auto;
+}
+.tab-btn{
+  flex:1;min-width:120px;
+  padding:10px 12px;
+  background:none;border:none;
+  color:rgba(255,255,255,0.45);
+  font-family:'Source Serif 4',serif;
+  font-size:0.78rem;font-weight:400;
+  cursor:pointer;
+  border-bottom:3px solid transparent;
+  transition:all 0.2s;
+  white-space:nowrap;
+  letter-spacing:0.01em;
+}
+.tab-btn:hover{color:rgba(255,255,255,0.75);}
+.tab-btn.active{
+  color:var(--gold);
+  border-bottom-color:var(--gold);
+  background:rgba(196,154,42,0.07);
+}
+
+/* ── MAIN ── */
+.main{max-width:1100px;margin:0 auto;padding:36px 28px 80px;}
+.section-panel{display:none;}
+.section-panel.active{display:block;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── HERO ── */
+.hero{
+  background:var(--navy);
+  border-radius:18px;
+  padding:44px 48px 40px;
+  color:#fff;
+  margin-bottom:32px;
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'';position:absolute;right:-80px;top:-80px;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,154,42,0.1) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.14em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:2.4rem;line-height:1.15;margin-bottom:16px;
+}
+.hero p{color:rgba(255,255,255,0.65);font-size:0.98rem;max-width:580px;line-height:1.7;}
+.hero-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-top:28px;
+}
+.hero-stat{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:14px 16px;text-align:center;
+}
+.hero-stat .n{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;color:var(--gold);display:block;
+}
+.hero-stat .l{font-size:0.7rem;color:rgba(255,255,255,0.45);margin-top:2px;}
+
+/* ── CASE CARDS on home ── */
+.case-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.case-card{
+  border-radius:14px;padding:24px 22px;cursor:pointer;
+  border:none;text-align:left;
+  transition:all 0.22s;
+  font-family:'Source Serif 4',serif;
+}
+.case-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.case-card.w4{background:var(--w4);color:#fff;}
+.case-card.w5{background:var(--w5);color:#fff;}
+.case-card.w6{background:var(--w6);color:#fff;}
+.case-num{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.12em;
+  opacity:0.7;margin-bottom:8px;text-transform:uppercase;
+}
+.case-card h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:8px;line-height:1.2;}
+.case-card p{font-size:0.82rem;opacity:0.75;line-height:1.5;}
+.case-skills{
+  display:flex;flex-wrap:wrap;gap:5px;margin-top:14px;
+}
+.case-skill-pill{
+  font-size:0.65rem;font-family:'DM Mono',monospace;
+  padding:3px 8px;border-radius:10px;
+  background:rgba(255,255,255,0.15);color:#fff;
+  letter-spacing:0.05em;
+}
+
+/* ── HOW TO USE ── */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;}
+.how-step{
+  background:var(--white);
+  border:0.5px solid var(--border);
+  border-radius:12px;padding:18px 16px;
+  text-align:center;
+}
+.how-num{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:2rem;color:var(--gold);display:block;margin-bottom:8px;
+}
+.how-step h4{font-size:0.88rem;font-weight:600;margin-bottom:6px;}
+.how-step p{font-size:0.78rem;color:var(--gray);line-height:1.5;}
+
+/* ── CASE LAYOUT ── */
+.case-header{
+  border-radius:16px 16px 0 0;
+  padding:28px 32px 24px;
+  color:#fff;margin-bottom:0;
+}
+.case-header.w4{background:var(--w4);}
+.case-header.w5{background:var(--w5);}
+.case-header.w6{background:var(--w6);}
+.case-meta{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.12em;
+  opacity:0.65;text-transform:uppercase;margin-bottom:10px;
+}
+.case-header h2{
+  font-family:'Playfair Display',serif;
+  font-size:1.75rem;margin-bottom:6px;
+}
+.case-header p{font-size:0.88rem;opacity:0.75;line-height:1.6;}
+
+.case-body{
+  background:var(--white);
+  border:0.5px solid var(--border);
+  border-top:none;
+  border-radius:0 0 16px 16px;
+  padding:32px;
+  margin-bottom:28px;
+  box-shadow:var(--shadow);
+}
+
+/* ── VIGNETTE ── */
+.vignette-box{
+  background:var(--lgray);
+  border-radius:10px;padding:22px 24px;
+  margin-bottom:24px;
+  border-left:4px solid;
+  position:relative;
+}
+.vignette-box.w4{border-left-color:var(--w4m);}
+.vignette-box.w5{border-left-color:var(--w5m);}
+.vignette-box.w6{border-left-color:var(--w6m);}
+.vignette-label{
+  font-family:'DM Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--gray);margin-bottom:10px;
+}
+.vignette-box p{font-size:0.93rem;line-height:1.75;color:var(--dark);}
+.vignette-box strong{font-weight:600;}
+.vignette-box .highlight{
+  background:rgba(196,154,42,0.2);
+  border-radius:3px;padding:1px 4px;
+  font-weight:600;
+}
+
+/* ── STEP-BY-STEP ── */
+.steps-label{
+  font-family:'DM Mono',monospace;font-size:0.68rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gray);margin-bottom:16px;
+}
+.soap-step{
+  border:0.5px solid var(--border);
+  border-radius:12px;
+  margin-bottom:14px;
+  overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.soap-step:hover{box-shadow:var(--shadow);}
+.step-head{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 20px;cursor:pointer;
+  user-select:none;
+  background:var(--white);
+}
+.step-letter{
+  width:36px;height:36px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;
+  color:#fff;flex-shrink:0;
+  font-weight:700;
+}
+.step-letter.S{background:var(--navy);}
+.step-letter.O{background:#1e5a8a;}
+.step-letter.A{background:#2e7d6e;}
+.step-letter.P{background:#7a4a00;}
+.step-info{flex:1;}
+.step-info h4{font-size:0.95rem;font-weight:600;margin-bottom:2px;}
+.step-info p{font-size:0.8rem;color:var(--gray);}
+.step-toggle{
+  font-size:0.75rem;color:var(--gray);
+  transition:transform 0.2s;
+}
+.soap-step.open .step-toggle{transform:rotate(90deg);}
+.step-body{
+  display:none;
+  padding:0 20px 20px 20px;
+  border-top:0.5px solid var(--lgray);
+  background:var(--white);
+}
+.soap-step.open .step-body{display:block;}
+
+.ask-list{
+  list-style:none;margin:14px 0;
+}
+.ask-list li{
+  padding:8px 14px;
+  background:var(--lgray);
+  border-radius:7px;
+  font-size:0.88rem;
+  margin-bottom:6px;
+  display:flex;align-items:flex-start;gap:10px;
+  line-height:1.5;
+}
+.ask-list li::before{
+  content:'?';
+  font-family:'DM Mono',monospace;
+  font-size:0.7rem;font-weight:500;
+  color:var(--gold);
+  background:var(--navy);
+  width:18px;height:18px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;
+}
+.extract-hint{
+  background:var(--goldl);
+  border:0.5px solid rgba(196,154,42,0.4);
+  border-radius:8px;padding:12px 16px;
+  font-size:0.85rem;line-height:1.6;margin-top:12px;
+}
+.extract-hint strong{color:var(--navy);}
+
+/* ── EXEMPLAR ── */
+.exemplar-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;flex-wrap:wrap;gap:8px;
+}
+.exemplar-label{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--gray);
+}
+.quality-badge{
+  font-size:0.72rem;font-family:'DM Mono',monospace;
+  padding:4px 10px;border-radius:10px;
+  background:var(--navy);color:var(--gold);
+}
+
+.soap-doc{
+  border:0.5px solid var(--border);border-radius:12px;
+  overflow:hidden;background:var(--white);
+  font-family:'Source Serif 4',serif;
+}
+.soap-row{
+  border-bottom:0.5px solid var(--lgray);
+}
+.soap-row:last-child{border-bottom:none;}
+.soap-row-head{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 18px;
+  background:var(--lgray);
+  cursor:pointer;user-select:none;
+}
+.soap-tag{
+  font-family:'DM Mono',monospace;font-size:0.7rem;font-weight:500;
+  padding:3px 9px;border-radius:6px;color:#fff;
+  letter-spacing:0.06em;flex-shrink:0;
+}
+.soap-tag.S{background:var(--navy);}
+.soap-tag.O{background:#1e5a8a;}
+.soap-tag.A{background:#2e7d6e;}
+.soap-tag.P{background:#7a4a00;}
+.soap-row-head span{font-size:0.82rem;font-weight:600;color:var(--dark);}
+.soap-row-head .toggle-icon{margin-left:auto;font-size:0.75rem;color:var(--gray);transition:transform 0.2s;}
+.soap-row.open .toggle-icon{transform:rotate(90deg);}
+.soap-content{
+  display:none;
+  padding:18px 20px;
+  font-size:0.9rem;line-height:1.8;
+}
+.soap-row.open .soap-content{display:block;}
+.term-chip{
+  display:inline-block;
+  background:rgba(26,90,96,0.1);
+  border:1px solid rgba(26,90,96,0.25);
+  border-radius:4px;padding:1px 6px;
+  font-size:0.8rem;font-style:italic;font-weight:600;
+  color:#1a5a60;cursor:pointer;position:relative;
+}
+.term-chip:hover .term-tooltip{display:block;}
+.term-tooltip{
+  display:none;
+  position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);
+  background:var(--navy);color:#fff;
+  font-size:0.72rem;font-style:normal;
+  padding:6px 10px;border-radius:6px;
+  white-space:nowrap;z-index:100;
+  pointer-events:none;
+  font-family:'Source Serif 4',serif;
+}
+.annotation{
+  background:var(--goldl);
+  border-left:3px solid var(--gold);
+  border-radius:0 6px 6px 0;
+  padding:8px 12px;margin-top:10px;
+  font-size:0.8rem;color:#5a4000;line-height:1.5;
+}
+.annotation strong{color:#3a2800;}
+
+/* ── FEEDBACK SECTION ── */
+.feedback-intro{
+  background:var(--navy);color:#fff;
+  border-radius:12px;padding:20px 24px;
+  margin-bottom:20px;
+}
+.feedback-intro h3{
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;color:var(--gold);margin-bottom:6px;
+}
+.feedback-intro p{font-size:0.85rem;color:rgba(255,255,255,0.7);line-height:1.6;}
+
+.mistake-card{
+  border-radius:12px;padding:20px 22px;
+  margin-bottom:14px;
+  border-left:4px solid;
+}
+.mistake-card.wrong{
+  background:var(--wrongbg);
+  border-left-color:var(--wrong);
+}
+.mistake-card.right{
+  background:var(--correctbg);
+  border-left-color:var(--correct);
+}
+.mistake-card.warn{
+  background:var(--warnbg);
+  border-left-color:var(--warn);
+}
+.mistake-label{
+  font-family:'DM Mono',monospace;font-size:0.65rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  margin-bottom:8px;font-weight:500;
+}
+.mistake-card.wrong .mistake-label{color:var(--wrong);}
+.mistake-card.right .mistake-label{color:var(--correct);}
+.mistake-card.warn .mistake-label{color:var(--warn);}
+.mistake-card h4{font-size:0.93rem;font-weight:600;margin-bottom:8px;}
+.mistake-card.wrong h4{color:var(--wrong);}
+.mistake-card.right h4{color:var(--correct);}
+.mistake-card.warn h4{color:var(--warn);}
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.compare-box{border-radius:8px;padding:10px 14px;font-size:0.85rem;line-height:1.6;}
+.compare-bad{background:rgba(153,27,27,0.08);border:0.5px solid rgba(153,27,27,0.2);}
+.compare-good{background:rgba(22,101,52,0.08);border:0.5px solid rgba(22,101,52,0.2);}
+.compare-label{
+  font-family:'DM Mono',monospace;font-size:0.62rem;
+  letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:5px;
+}
+.compare-bad .compare-label{color:var(--wrong);}
+.compare-good .compare-label{color:var(--correct);}
+.mistake-note{font-size:0.82rem;color:var(--gray);margin-top:10px;line-height:1.5;}
+
+/* ── CHECKLIST ── */
+.checklist-wrap{
+  background:var(--white);border:0.5px solid var(--border);
+  border-radius:12px;padding:24px;margin-bottom:16px;
+}
+.checklist-wrap h3{
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  margin-bottom:16px;
+}
+.check-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:8px 0;border-bottom:0.5px solid var(--lgray);
+  font-size:0.88rem;line-height:1.5;
+}
+.check-item:last-child{border-bottom:none;}
+.check-item input[type=checkbox]{
+  width:17px;height:17px;margin-top:2px;
+  accent-color:var(--navy);flex-shrink:0;
+}
+.check-item label{cursor:pointer;}
+.check-item input:checked+label{text-decoration:line-through;color:var(--gray);}
+
+/* ── TERM REFERENCE ── */
+.term-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.term-ref{
+  background:var(--white);border:0.5px solid var(--border);
+  border-radius:8px;padding:12px 14px;
+}
+.term-name{
+  font-style:italic;font-weight:600;
+  font-size:0.9rem;margin-bottom:3px;
+}
+.term-root{
+  font-family:'DM Mono',monospace;font-size:0.68rem;
+  color:var(--gray);margin-bottom:4px;
+}
+.term-def{font-size:0.8rem;color:var(--gray);line-height:1.4;}
+.term-clinical{
+  font-size:0.75rem;color:var(--navy);
+  font-style:italic;margin-top:4px;line-height:1.4;
+  border-top:0.5px solid var(--lgray);padding-top:4px;
+}
+
+/* ── SECTION TITLES ── */
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.65rem;margin-bottom:6px;
+}
+.section-sub{font-size:0.88rem;color:var(--gray);margin-bottom:26px;}
+
+.sub-nav{
+  display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;
+}
+.sub-btn{
+  padding:7px 18px;border-radius:20px;
+  border:0.5px solid var(--border);
+  background:var(--white);
+  font-family:'Source Serif 4',serif;
+  font-size:0.82rem;cursor:pointer;color:var(--dark);
+  transition:all 0.18s;
+}
+.sub-btn:hover{background:var(--lgray);}
+.sub-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+.case-sub{display:none;}
+.case-sub.active{display:block;}
+
+/* ── QUICK TIP BAR ── */
+.tip-strip{
+  background:var(--navy2);
+  border-radius:10px;padding:12px 18px;
+  font-size:0.83rem;color:rgba(255,255,255,0.7);
+  margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+  line-height:1.5;
+}
+.tip-strip span{color:var(--gold);font-weight:600;flex-shrink:0;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .hero-grid{grid-template-columns:repeat(2,1fr);}
+  .case-cards{grid-template-columns:1fr;}
+  .how-grid{grid-template-columns:repeat(2,1fr);}
+  .term-grid{grid-template-columns:1fr 1fr;}
+  .compare-row{grid-template-columns:1fr;}
+  .header-inner{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">DC International Teaching Hospital</div>
+      <div class="header-sub">Phase 2 · SOAP Note Writing Coach</div>
+    </div>
+    <div class="header-badge">Rotation A Boards Prep</div>
+  </div>
+  <nav class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('home')">🏠 Start Here</button>
+    <button class="tab-btn" onclick="showTab('w4')">🔥 W4 · Burn Case</button>
+    <button class="tab-btn" onclick="showTab('w5')">🦴 W5 · Fracture Case</button>
+    <button class="tab-btn" onclick="showTab('w6')">💪 W6 · ROM Case</button>
+    <button class="tab-btn" onclick="showTab('mistakes')">⚠️ Common Mistakes</button>
+    <button class="tab-btn" onclick="showTab('checklist')">✅ Pre-Exam Checklist</button>
+  </nav>
+</header>
+
+<main class="main">
+
+<!-- ════════════════ HOME ════════════════ -->
+<div id="home" class="section-panel active">
+  <div class="hero">
+    <div class="hero-label">Phase 2 · Trauma &amp; Structure</div>
+    <h1>SOAP Note<br>Writing Coach</h1>
+    <p>Three real patient cases from your Phase 2 rotations. Each case walks you through the exact thinking process a clinician uses — step by step — before showing you an annotated exemplar written in full clinical language.</p>
+    <div class="hero-grid">
+      <div class="hero-stat"><span class="n">3</span><span class="l">Patient Cases</span></div>
+      <div class="hero-stat"><span class="n">4</span><span class="l">Steps per Case</span></div>
+      <div class="hero-stat"><span class="n">20</span><span class="l">Points on Exam</span></div>
+      <div class="hero-stat"><span class="n">8+</span><span class="l">Terms Required</span></div>
+    </div>
+  </div>
+
+  <div class="how-grid">
+    <div class="how-step">
+      <span class="how-num">1</span>
+      <h4>Read the Case</h4>
+      <p>Study the clinical vignette. Highlighted clues point you toward what belongs in each SOAP section.</p>
+    </div>
+    <div class="how-step">
+      <span class="how-num">2</span>
+      <h4>Follow the Steps</h4>
+      <p>Open each S, O, A, P step. Answer the questions. See exactly what information goes where and why.</p>
+    </div>
+    <div class="how-step">
+      <span class="how-num">3</span>
+      <h4>Read the Exemplar</h4>
+      <p>Study the annotated model note. Hover over clinical terms to see their root words and meanings.</p>
+    </div>
+    <div class="how-step">
+      <span class="how-num">4</span>
+      <h4>Check Mistakes</h4>
+      <p>Visit the Common Mistakes tab. See side-by-side comparisons of novice vs. clinical writing.</p>
+    </div>
+  </div>
+
+  <div style="margin-top:28px">
+    <div class="section-title" style="font-size:1.2rem;margin-bottom:16px">Choose your patient case</div>
+    <div class="case-cards">
+      <button class="case-card w4" onclick="showTab('w4')">
+        <div class="case-num">Week 4 · Integumentary</div>
+        <h3>Marcus Williams<br>Burn Unit</h3>
+        <p>Kitchen grease splash to right forearm. Your job: classify the burn, document wound findings, write the plan.</p>
+        <div class="case-skills">
+          <span class="case-skill-pill">Burn staging</span>
+          <span class="case-skill-pill">Wound terms</span>
+          <span class="case-skill-pill">TBSA</span>
+        </div>
+      </button>
+      <button class="case-card w5" onclick="showTab('w5')">
+        <div class="case-num">Week 5 · Skeletal</div>
+        <h3>Destiny Williams<br>Orthopedics</h3>
+        <p>FOOSH injury with wrist fracture. Your job: classify the fracture, document CMS findings, write a clinical plan.</p>
+        <div class="case-skills">
+          <span class="case-skill-pill">Fracture types</span>
+          <span class="case-skill-pill">CMS check</span>
+          <span class="case-skill-pill">ORIF reasoning</span>
+        </div>
+      </button>
+      <button class="case-card w6" onclick="showTab('w6')">
+        <div class="case-num">Week 6 · Muscular</div>
+        <h3>Jordan Kim<br>Sports Medicine</h3>
+        <p>Shoulder injury with ROM deficit. Your job: document AROM vs PROM, identify the deficit, write the plan.</p>
+        <div class="case-skills">
+          <span class="case-skill-pill">AROM/PROM</span>
+          <span class="case-skill-pill">Goniometer</span>
+          <span class="case-skill-pill">Movement terms</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ W4 BURN CASE ════════════════ -->
+<div id="w4" class="section-panel">
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('w4','scenario')">1. Read the Case</button>
+    <button class="sub-btn" onclick="showSub('w4','steps')">2. Step-by-Step</button>
+    <button class="sub-btn" onclick="showSub('w4','exemplar')">3. Full Exemplar</button>
+    <button class="sub-btn" onclick="showSub('w4','terms')">4. Key Terms</button>
+  </div>
+
+  <!-- SCENARIO -->
+  <div id="w4-scenario" class="case-sub active">
+    <div class="case-header w4">
+      <div class="case-meta">Week 4 · Burn Unit · Patient MRN-00452</div>
+      <h2>Marcus Williams, 17 M</h2>
+      <p>Chief complaint: "I was cooking and the grease from the pan splashed on my right arm. It hurts so bad and there are blisters everywhere."</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>Before you write:</span> Read the entire vignette first. The highlighted clues tell you which SOAP section each piece of information belongs in.</div>
+      <div class="vignette-box w4">
+        <div class="vignette-label">Clinical Vignette — Burn Unit</div>
+        <p>Marcus Williams is a <span class="highlight">17-year-old male</span> who presents to the ED burn unit after a <span class="highlight">kitchen grease splash to the right forearm</span> approximately 2 hours ago. He reports <span class="highlight">pain rated 8/10</span>, constant, burning in character. He states he immediately ran cold water over the arm at home but has not taken any pain medication. He denies loss of sensation to the area.</p>
+        <p style="margin-top:12px">On examination, vital signs are: <span class="highlight">T 98.6°F, BP 122/78 mmHg, HR 92 bpm, RR 18 breaths/min, O₂ sat 98% on room air</span>. The right forearm shows <span class="highlight">erythema and edema extending approximately 8cm × 5cm</span> over the dorsal surface. <span class="highlight">Multiple intact and ruptured blisters are present</span>. The wound surface appears <span class="highlight">moist and glistening</span>. Dermis is visible. <span class="highlight">No dry, leathery, or painless areas</span> noted. Capillary refill is brisk bilaterally. Estimated <span class="highlight">TBSA involvement: approximately 2%</span>.</p>
+      </div>
+      <div style="background:var(--w4l);border-radius:10px;padding:18px 20px;font-size:0.85rem;line-height:1.7;border:0.5px solid rgba(122,26,26,0.15);">
+        <strong style="color:var(--w4)">What you are being asked to do:</strong> Using this clinical vignette, write a complete SOAP note for Marcus's burn unit visit. You must use at least 8 Phase 2 terms correctly across the note. Click <strong>"2. Step-by-Step"</strong> above to begin building your note section by section.
+      </div>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div id="w4-steps" class="case-sub">
+    <div class="case-header w4">
+      <div class="case-meta">Step-by-Step Guide · W4 Burn Case</div>
+      <h2>Building Your SOAP Note</h2>
+      <p>Click each section to open the guidance. Answer the questions in your own notes, then check the exemplar.</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>Remember:</span> S = what the patient TELLS you. O = what you SEE and MEASURE. A = your clinical judgment. P = your plan of action.</div>
+
+      <div class="soap-step open">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter S">S</div>
+          <div class="step-info">
+            <h4>Subjective — The Patient's Story</h4>
+            <p>What the patient tells you in their own words</p>
+          </div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <p style="font-size:0.88rem;color:var(--gray);margin-bottom:12px;">The S section captures who the patient is, why they came in, and what they experienced — in their own words when possible.</p>
+          <ul class="ask-list">
+            <li>Who is the patient? (age, sex) — start every S section with this</li>
+            <li>What is their chief complaint — ideally in quotes?</li>
+            <li>What was the mechanism of injury? How did it happen?</li>
+            <li>When did it happen? How long ago?</li>
+            <li>What symptoms are they reporting? Pain rating? Character of pain?</li>
+            <li>What have they tried at home before coming in?</li>
+            <li>Any relevant negatives they deny? (e.g., "denies loss of sensation")</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>From the vignette, your S section should include:</strong> 17-year-old male · kitchen grease splash mechanism · approximately 2 hours ago · pain 8/10, burning character · ran cold water at home · denies loss of sensation. Write the chief complaint in quotation marks.
+          </div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter O">O</div>
+          <div class="step-info">
+            <h4>Objective — What You Find</h4>
+            <p>Numbers, measurements, physical findings — no patient opinions</p>
+          </div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <p style="font-size:0.88rem;color:var(--gray);margin-bottom:12px;">The O section is all facts. Vital signs with units. Physical exam findings using precise clinical terms. This is where most of your Phase 2 vocabulary lives.</p>
+          <ul class="ask-list">
+            <li>What are the vital signs? (T, BP, HR, RR, O₂ — must include units)</li>
+            <li>Where exactly is the wound? (location, size in cm × cm)</li>
+            <li>What does the wound LOOK like? Describe color, texture, moisture</li>
+            <li>Are blisters present? Intact or ruptured?</li>
+            <li>What layer of skin is involved? Can you see dermis?</li>
+            <li>Is there any dry, leathery, or painless tissue? (This rules in/out 3rd degree)</li>
+            <li>What is the estimated TBSA?</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>Clinical term list for this O section:</strong> <em>erythema</em> (redness), <em>edema</em> (swelling), <em>dermis</em> (middle skin layer), <em>blisters/vesicles</em>, <em>TBSA</em> (total body surface area), <em>ecchymosis</em> (bruising — check if present), <em>eschar</em> (leathery crust — NOT present here, which is important). Use these terms instead of everyday words.
+          </div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter A">A</div>
+          <div class="step-info">
+            <h4>Assessment — Your Clinical Judgment</h4>
+            <p>What is your diagnosis? What degree burn is this?</p>
+          </div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <p style="font-size:0.88rem;color:var(--gray);margin-bottom:12px;">The A section is your clinical conclusion based on what you observed. For a burn case, you must classify the burn and justify your classification.</p>
+          <ul class="ask-list">
+            <li>What degree burn is this? (1st, 2nd partial, 2nd full, 3rd, 4th)</li>
+            <li>What are the key features that tell you the degree? (name them)</li>
+            <li>What degree is RULED OUT and why? (e.g., no eschar = rules out 3rd)</li>
+            <li>What is the estimated TBSA involvement?</li>
+            <li>Is this a minor, moderate, or major burn by clinical criteria?</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>Decision logic:</strong> Blisters + moist/glistening + dermis visible + pain 8/10 = <strong>2nd degree partial thickness burn</strong>. The pain rules out 3rd degree (nerve endings destroyed = painless). No eschar confirms no full thickness involvement. Write "2nd degree (partial thickness) burn" in your A — never just "burn."
+          </div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter P">P</div>
+          <div class="step-info">
+            <h4>Plan — What Happens Next</h4>
+            <p>Immediate treatment, wound care, follow-up, patient education</p>
+          </div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <p style="font-size:0.88rem;color:var(--gray);margin-bottom:12px;">The P section is your action list. For a burn case, think in layers: immediate wound care, pain management, infection prevention, and follow-up.</p>
+          <ul class="ask-list">
+            <li>What immediate wound care is needed? (irrigation, debridement, dressing)</li>
+            <li>What about pain management?</li>
+            <li>How do you prevent infection? (topical antibiotics, dressing type)</li>
+            <li>Does this patient need admission, or can they go home?</li>
+            <li>When should they follow up?</li>
+            <li>What should you teach the patient before they leave?</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>Clinical terms for the P section:</strong> <em>debridement</em> (removing dead tissue), <em>granulation</em> (new tissue — expected in healing), <em>wound irrigation</em>, <em>topical antibiotic</em>, <em>non-adherent dressing</em>, <em>outpatient wound care</em>, <em>return precautions</em>. A strong Plan has at least 4 numbered items.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXEMPLAR -->
+  <div id="w4-exemplar" class="case-sub">
+    <div class="case-header w4">
+      <div class="case-meta">Annotated Exemplar · W4 Burn Case</div>
+      <h2>Model SOAP Note</h2>
+      <p>This is what a strong Phase 2 SOAP note looks like. Hover over <span style="border-bottom:1px dashed rgba(255,255,255,0.5)">underlined terms</span> to see root words and definitions. Read the annotations in gold.</p>
+    </div>
+    <div class="case-body">
+      <div class="exemplar-header">
+        <div class="exemplar-label">Patient: Marcus Williams · MRN-00452 · 17 M · Burn Unit</div>
+        <div class="quality-badge">IB Level 5–6 · Resident Quality</div>
+      </div>
+
+      <div class="soap-doc">
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag S">S</span>
+            <span>Subjective</span>
+            <span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p>17-year-old male presents to the burn unit with chief complaint: <em>"I was cooking and the grease from the pan splashed on my right arm. It hurts so bad and there are blisters everywhere."</em> Mechanism: thermal injury from hot cooking grease splash to the right dorsal forearm, approximately 2 hours prior to presentation. Patient reports pain 8/10, constant, burning in character. Home treatment: cool running water applied immediately after injury. Denies loss of sensation to the affected area. No prior burn injuries. No known allergies.</p>
+            <div class="annotation"><strong>Why this S earns full credit:</strong> Patient age and sex appear in the first line. Chief complaint is in direct quotes. Mechanism is specific — <em>thermal injury from grease splash</em> — not just "he got burned." Pain is rated AND described in character. Home care is documented. Relevant negatives are included ("denies loss of sensation" — this matters because sensation is part of burn depth assessment).</div>
+          </div>
+        </div>
+
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag O">O</span>
+            <span>Objective</span>
+            <span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p><strong>Vital Signs:</strong> T 98.6°F oral · BP 122/78 mmHg · HR 92 bpm · RR 18 breaths/min · O₂ sat 98% on room air · Pain 8/10</p>
+            <p style="margin-top:10px"><strong>Physical Examination — Right Forearm:</strong> Wound located on dorsal surface of right forearm, measuring approximately 8 cm × 5 cm. Significant <span class="term-chip">erythema<span class="term-tooltip">erythr/o = red · redness from vasodilation</span></span> and <span class="term-chip">edema<span class="term-tooltip">swelling from fluid accumulation in tissue</span></span> noted throughout the affected area. Multiple blisters present — both intact and ruptured. Wound surface is moist and glistening; <span class="term-chip">dermis<span class="term-tooltip">derm/o = skin · middle layer containing blood vessels and nerve endings</span></span> is visible through the wound bed. No <span class="term-chip">eschar<span class="term-tooltip">dry, dark, leathery dead tissue · hallmark of 3rd degree burns</span></span> identified. No dry, leathery, or painless regions noted. Capillary refill brisk bilaterally. Estimated <span class="term-chip">TBSA<span class="term-tooltip">Total Body Surface Area · 2% involvement using Rule of Nines</span></span> involvement: approximately 2%.</p>
+            <div class="annotation"><strong>Why this O earns full credit:</strong> Every vital sign has its unit. The wound is described with exact dimensions (cm × cm). Each clinical finding uses precise language: <em>erythema</em> not "redness," <em>edema</em> not "swelling," <em>dermis</em> not "deep layer." Critically, the note says "No eschar identified" — documenting what is ABSENT is just as important as what is present, because it rules out 3rd degree.</div>
+          </div>
+        </div>
+
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag A">A</span>
+            <span>Assessment</span>
+            <span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p><strong>2nd degree (partial thickness) burn,</strong> right dorsal forearm, approximately 2% TBSA. Classification supported by: blistering, moist wound surface, dermis visible, pain intact (8/10). Third-degree burn ruled out: no <span class="term-chip">eschar<span class="term-tooltip">absence of eschar = nerve endings intact = partial thickness only</span></span>, no painless or leathery regions. Minor burn by clinical criteria — no airway involvement, hemodynamically stable, TBSA &lt;10%.</p>
+            <div class="annotation"><strong>Why this A earns full credit:</strong> The burn is classified precisely — not just "2nd degree" but "2nd degree partial thickness." The reasoning is stated explicitly: three signs that confirm it, one sign that rules out 3rd degree. A severity judgment is made (minor burn). This is how clinicians think — they don't just name the diagnosis, they justify it.</div>
+          </div>
+        </div>
+
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag P">P</span>
+            <span>Plan</span>
+            <span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <ol style="padding-left:18px;font-size:0.88rem;line-height:1.9;">
+              <li><strong>Wound care:</strong> Gentle wound irrigation with sterile saline. Careful <span class="term-chip">debridement<span class="term-tooltip">débrider = to remove dead/damaged tissue to promote healing</span></span> of ruptured blister material. Apply topical antibiotic (silver sulfadiazine). Non-adherent dressing applied and secured.</li>
+              <li><strong>Pain management:</strong> Ibuprofen 400mg PO q6h PRN. Reassess pain following initial dressing application.</li>
+              <li><strong>Discharge with outpatient wound care instructions:</strong> Daily dressing changes. Monitor for signs of infection — <span class="term-chip">purulence<span class="term-tooltip">pus formation · thick yellow-green discharge = sign of infection</span></span>, increased <span class="term-chip">erythema<span class="term-tooltip">worsening redness beyond wound margins = cellulitis concern</span></span>, fever, or malodor. Expect <span class="term-chip">granulation<span class="term-tooltip">granulum = little grain · new beefy-red tissue filling the wound bed during healing</span></span> tissue to begin forming in 3–5 days.</li>
+              <li><strong>Follow-up:</strong> Return to burn clinic in 3–5 days for wound reassessment. Return to ED sooner if worsening pain, fever &gt;101°F, or signs of infection develop.</li>
+              <li><strong>Patient education:</strong> Reviewed burn wound care, dressing change technique, and infection warning signs with patient and parent.</li>
+            </ol>
+            <div class="annotation"><strong>Why this P earns full credit:</strong> Five numbered action items. Each uses clinical language — <em>debridement, purulence, erythema, granulation</em>. The plan is sequenced logically: treat → medicate → discharge instructions → follow-up → education. The patient isn't just told "come back if it gets worse" — specific warning signs are named.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMS -->
+  <div id="w4-terms" class="case-sub">
+    <div class="case-header w4">
+      <div class="case-meta">Week 4 · Key Terms for SOAP Writing</div>
+      <h2>Terms You Need in This Note</h2>
+      <p>These are the Phase 2 terms most likely to appear in a burn-related SOAP note on the Boards exam.</p>
+    </div>
+    <div class="case-body">
+      <div class="term-grid">
+        <div class="term-ref"><div class="term-name">erythema</div><div class="term-root">Greek: erythros (red)</div><div class="term-def">Redness from vasodilation. Use instead of "redness."</div><div class="term-clinical">Use in O: "erythema extending 3cm beyond wound margins"</div></div>
+        <div class="term-ref"><div class="term-name">dermis</div><div class="term-root">derm/o (skin)</div><div class="term-def">Middle skin layer — contains blood vessels and nerve endings.</div><div class="term-clinical">Use in O: "dermis visible through wound bed"</div></div>
+        <div class="term-ref"><div class="term-name">eschar</div><div class="term-root">Greek: eschara (scab)</div><div class="term-def">Dry, dark, leathery dead tissue. ABSENCE of eschar rules out 3rd degree.</div><div class="term-clinical">Use in O or A: "no eschar identified — 3rd degree excluded"</div></div>
+        <div class="term-ref"><div class="term-name">TBSA</div><div class="term-root">Total Body Surface Area</div><div class="term-def">Percentage of body surface burned. Calculated with Rule of Nines.</div><div class="term-clinical">Use in O and A: "estimated 2% TBSA involvement"</div></div>
+        <div class="term-ref"><div class="term-name">debridement</div><div class="term-root">French: débrider</div><div class="term-def">Removal of dead, damaged, or infected tissue to promote healing.</div><div class="term-clinical">Use in P: "gentle debridement of ruptured blister material"</div></div>
+        <div class="term-ref"><div class="term-name">granulation</div><div class="term-root">Latin: granulum (little grain)</div><div class="term-def">New connective tissue forming during wound healing. Beefy-red appearance.</div><div class="term-clinical">Use in P: "granulation tissue expected in 3–5 days"</div></div>
+        <div class="term-ref"><div class="term-name">purulence</div><div class="term-root">Latin: pus</div><div class="term-def">Pus formation — sign of infection. Yellow-green discharge.</div><div class="term-clinical">Use in P: "return if purulence develops"</div></div>
+        <div class="term-ref"><div class="term-name">edema</div><div class="term-root">Greek: oidema (swelling)</div><div class="term-def">Swelling from fluid accumulation in tissue. Use instead of "swelling."</div><div class="term-clinical">Use in O: "edema noted over the dorsal forearm"</div></div>
+        <div class="term-ref"><div class="term-name">subcutaneous</div><div class="term-root">sub- + cutane/o (skin)</div><div class="term-def">Below the skin. 4th degree burns reach subcutaneous tissue and bone.</div><div class="term-clinical">Use in A when ruling in/out deeper injury</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ W5 FRACTURE CASE ════════════════ -->
+<div id="w5" class="section-panel">
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('w5','scenario')">1. Read the Case</button>
+    <button class="sub-btn" onclick="showSub('w5','steps')">2. Step-by-Step</button>
+    <button class="sub-btn" onclick="showSub('w5','exemplar')">3. Full Exemplar</button>
+    <button class="sub-btn" onclick="showSub('w5','terms')">4. Key Terms</button>
+  </div>
+
+  <div id="w5-scenario" class="case-sub active">
+    <div class="case-header w5">
+      <div class="case-meta">Week 5 · Orthopedics · Patient MRN-00617</div>
+      <h2>Destiny Williams, 15 F</h2>
+      <p>Chief complaint: "I fell off my bike trying to stop myself and my wrist has been killing me ever since."</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>Note:</span> This is a different patient (Destiny Williams) — a new case so you practice independently, not copy from Marcus's chart.</div>
+      <div class="vignette-box w5">
+        <div class="vignette-label">Clinical Vignette — Orthopedic Trauma</div>
+        <p>Destiny Williams is a <span class="highlight">15-year-old female</span> who presents to the orthopedic ED after a <span class="highlight">fall from her bicycle</span>, landing with <span class="highlight">outstretched hands (FOOSH mechanism)</span> approximately 1 hour ago. She reports <span class="highlight">pain rated 9/10</span>, sharp, worse with any movement. She denies any numbness or tingling initially but now reports <span class="highlight">mild tingling in her thumb and index finger</span>.</p>
+        <p style="margin-top:12px">Vital signs: <span class="highlight">T 98.2°F, BP 116/74, HR 98 bpm, RR 18, O₂ sat 99%</span>. Right wrist examination reveals <span class="highlight">significant edema and ecchymosis over the distal radius</span>. There is <span class="highlight">visible deformity with dorsal displacement</span> of the distal fragment. <span class="highlight">Crepitus noted on initial assessment</span>. X-ray reveals a <span class="highlight">fracture line that spirals around the shaft of the distal radius</span>, with <span class="highlight">two major fragments</span>. Skin is <span class="highlight">intact over the fracture site</span>. Post-splint <span class="highlight">CMS assessment:</span> <span class="highlight">cap refill 3 seconds</span>, patient <span class="highlight">unable to fully extend fingers</span>, <span class="highlight">tingling persists</span> in thumb/index distribution.</p>
+      </div>
+      <div style="background:var(--w5l);border-radius:10px;padding:18px 20px;font-size:0.85rem;line-height:1.7;border:0.5px solid rgba(26,53,96,0.15);">
+        <strong style="color:var(--w5)">What makes this case harder:</strong> You need to classify the fracture using two descriptors (type + open vs. closed). You also need to document the CMS findings accurately and recognize that the post-splint CMS shows two abnormalities — this is clinically urgent information that belongs in your Plan.
+      </div>
+    </div>
+  </div>
+
+  <div id="w5-steps" class="case-sub">
+    <div class="case-header w5">
+      <div class="case-meta">Step-by-Step Guide · W5 Fracture Case</div>
+      <h2>Building Your SOAP Note</h2>
+      <p>Fracture cases require extra precision in the O section — CMS findings and fracture classification are both tested.</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>Fracture rule:</span> Always classify with TWO descriptors — the fracture pattern (spiral, transverse, etc.) AND whether it is open or closed.</div>
+
+      <div class="soap-step open">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter S">S</div>
+          <div class="step-info"><h4>Subjective</h4><p>Patient story, mechanism, symptoms</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>Who is the patient? Age and sex in the first sentence.</li>
+            <li>What is the mechanism? Be specific — FOOSH is a clinical abbreviation you should use.</li>
+            <li>What is their chief complaint in quotes?</li>
+            <li>Pain rating and character?</li>
+            <li>Any neurological symptoms? (tingling, numbness — these matter for fracture management)</li>
+          </ul>
+          <div class="extract-hint"><strong>Key for the S:</strong> The tingling in thumb and index finger is a neurological symptom that suggests possible nerve involvement. It belongs in S because the <em>patient is reporting it</em>. Later, in O, you confirm it with your CMS assessment.</div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter O">O</div>
+          <div class="step-info"><h4>Objective — Vitals, X-ray, CMS</h4><p>This section must include your CMS findings table</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>Vital signs with all units</li>
+            <li>Wound/fracture site description — location, deformity, swelling, bruising</li>
+            <li>X-ray findings — describe the fracture line, number of fragments, displacement</li>
+            <li>CMS CHECK — must document all 3 components: Circulation (cap refill), Motion (can they move fingers?), Sensation (any tingling/numbness?)</li>
+            <li>Is skin intact? (This determines open vs. closed classification)</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>CMS documentation format:</strong> Write it as three named items — "C: cap refill 3 seconds (delayed). M: patient unable to fully extend fingers. S: tingling in thumb and index finger distribution." This makes it clear and easy to grade. A 3-second cap refill is ABNORMAL (normal is under 2 seconds).
+          </div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter A">A</div>
+          <div class="step-info"><h4>Assessment — Fracture Classification</h4><p>Name the fracture type precisely — two descriptors required</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>What type of fracture based on the X-ray description? (spiral, transverse, greenstick, comminuted, compression)</li>
+            <li>Is it open (compound) or closed? How do you know?</li>
+            <li>What bone? What region of the bone?</li>
+            <li>Is there displacement? How much?</li>
+            <li>What does the abnormal CMS tell you clinically?</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>Classification logic:</strong> "Fracture line spirals around the shaft" = spiral fracture. "Skin is intact" = closed fracture. Put it together: <strong>closed spiral fracture, distal radius, with dorsal displacement</strong>. Then add your CMS finding: "Post-splint CMS shows delayed capillary refill and incomplete motion — neurovascular compromise cannot be excluded."
+          </div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter P">P</div>
+          <div class="step-info"><h4>Plan — Urgent CMS Response + Fracture Management</h4><p>Abnormal CMS must be addressed FIRST in your plan</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>The CMS is abnormal — what do you do immediately? (This is your first plan item)</li>
+            <li>What imaging is needed?</li>
+            <li>Does this fracture likely need ORIF or can it be managed conservatively?</li>
+            <li>What is the ortho consult plan?</li>
+            <li>What do you tell the patient and family?</li>
+          </ul>
+          <div class="extract-hint">
+            <strong>CMS abnormality → immediate action:</strong> "Loosen and bivalve the splint immediately. Reassess CMS in 15 minutes." This MUST be your first plan item when CMS is compromised. Ignoring abnormal CMS findings in your Plan is the most dangerous mistake you can make on this exam.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="w5-exemplar" class="case-sub">
+    <div class="case-header w5">
+      <div class="case-meta">Annotated Exemplar · W5 Fracture Case</div>
+      <h2>Model SOAP Note</h2>
+      <p>Hover over clinical terms to see their word parts. Pay special attention to how CMS is documented in the O section.</p>
+    </div>
+    <div class="case-body">
+      <div class="exemplar-header">
+        <div class="exemplar-label">Patient: Destiny Williams · MRN-00617 · 15 F · Orthopedic Trauma</div>
+        <div class="quality-badge">IB Level 5–6 · Resident Quality</div>
+      </div>
+      <div class="soap-doc">
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag S">S</span><span>Subjective</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p>15-year-old female presents to orthopedic ED with chief complaint: <em>"I fell off my bike trying to stop myself and my wrist has been killing me ever since."</em> Mechanism: <span class="term-chip">FOOSH<span class="term-tooltip">Fall On Outstretched Hand — classic mechanism for distal radius fractures</span></span> injury — fell from bicycle and landed with hands extended, approximately 1 hour prior to arrival. Reports pain 9/10, sharp in character, significantly worse with any attempted wrist movement. Patient denies direct trauma to the wrist (no direct blow). Reports mild tingling in right thumb and index finger beginning after injury. No prior wrist injuries. No known allergies.</p>
+            <div class="annotation"><strong>Why this S works:</strong> FOOSH is used correctly as a clinical abbreviation — this alone shows terminology mastery. The neurological symptom (tingling) is included in S because the patient is reporting it. The distinction "no direct blow" supports the FOOSH mechanism and rules out transverse fracture pattern.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag O">O</span><span>Objective</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p><strong>Vital Signs:</strong> T 98.2°F · BP 116/74 mmHg · HR 98 bpm · RR 18 breaths/min · O₂ sat 99% · Pain 9/10</p>
+            <p style="margin-top:10px"><strong>Physical Exam — Right Wrist:</strong> Significant <span class="term-chip">edema<span class="term-tooltip">swelling from fluid accumulation in tissue</span></span> and <span class="term-chip">ecchymosis<span class="term-tooltip">ek + chymos = bruising from blood tracking under skin</span></span> over the distal radius. Visible deformity with dorsal displacement of the distal fragment. <span class="term-chip">Crepitus<span class="term-tooltip">crepitare = to rattle · grating sensation from fractured bone ends</span></span> noted on initial assessment (not reproduced). Skin intact over fracture site — no open wound.</p>
+            <p style="margin-top:10px"><strong>X-Ray (right wrist, AP and lateral):</strong> <span class="term-chip">Spiral fracture<span class="term-tooltip">helical fracture line wrapping around bone shaft from rotational force</span></span> pattern identified at the distal <span class="term-chip">diaphysis<span class="term-tooltip">dia + physis = the shaft of a long bone containing the medullary canal</span></span> of the radius. Two major fragments present. Dorsal displacement of distal fragment approximately 4mm. <span class="term-chip">Cortical<span class="term-tooltip">cortic/o = outer layer · cortical disruption = fracture confirmed</span></span> disruption confirmed on lateral view.</p>
+            <p style="margin-top:10px"><strong>Post-Splint <span class="term-chip">CMS<span class="term-tooltip">Circulation · Motion · Sensation — assessed distal to injury after splinting</span></span> Assessment:</strong></p>
+            <ul style="padding-left:20px;font-size:0.88rem;line-height:2;">
+              <li><strong>C — Circulation:</strong> Capillary refill 3 seconds (delayed; normal &lt;2 sec). Radial pulse present but diminished.</li>
+              <li><strong>M — Motion:</strong> Patient unable to fully extend fingers of right hand. Grip strength markedly reduced vs. contralateral.</li>
+              <li><strong>S — Sensation:</strong> Tingling (paresthesia) persists in right thumb and index finger distribution — consistent with median nerve territory.</li>
+            </ul>
+            <div class="annotation"><strong>Why this O earns full credit:</strong> CMS is documented as three named, separate items — not just "CMS intact" or "CMS abnormal." The clinician specifies WHAT is abnormal and WHY it matters (cap refill 3s vs. normal &lt;2s). Crepitus is noted once and not reproduced — this is clinically correct and shows awareness of patient comfort/safety.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag A">A</span><span>Assessment</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p><strong>Closed <span class="term-chip">spiral fracture<span class="term-tooltip">torsional force → helical fracture line wrapping around the bone shaft</span></span>, distal radius, right</strong> — with dorsal displacement and cortical disruption. Classification: spiral pattern (rotational mechanism, consistent with FOOSH). Closed: skin intact, no bone exposure. Post-splint CMS abnormalities present — delayed capillary refill and incomplete digital motion suggest possible neurovascular compromise requiring urgent reassessment.</p>
+            <div class="annotation"><strong>Why this A works:</strong> Two descriptors present — SPIRAL + CLOSED. The fracture is located precisely (distal radius, not just "wrist"). The CMS finding is included in the Assessment, not buried — because abnormal CMS elevates the clinical urgency and must inform the Plan.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag P">P</span><span>Plan</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <ol style="padding-left:18px;font-size:0.88rem;line-height:2;">
+              <li><strong>URGENT — CMS compromise:</strong> Loosen and bivalve splint immediately. Reassess CMS in 15 minutes. Document serial CMS findings. Vascular surgery on standby if circulation does not improve.</li>
+              <li><strong>Imaging:</strong> Orthogonal X-ray views obtained and reviewed. CT scan of right wrist ordered for surgical planning given displacement and spiral pattern.</li>
+              <li><strong>Orthopedic consult:</strong> <span class="term-chip">ORIF<span class="term-tooltip">Open Reduction Internal Fixation · surgical realignment of fracture with hardware</span></span> likely indicated given displacement and neurovascular involvement. Ortho team notified, consent process initiated.</li>
+              <li><strong>Pain management:</strong> IV morphine 0.1 mg/kg ordered. Reassess pain post-medication.</li>
+              <li><strong>Admission:</strong> Patient admitted for surgical planning and serial neurovascular monitoring. NPO status initiated in anticipation of possible operative intervention.</li>
+              <li><strong>Patient/family education:</strong> Reviewed fracture findings, surgical possibility, and importance of reporting any changes in sensation or color to the nursing staff immediately.</li>
+            </ol>
+            <div class="annotation"><strong>Why this P earns full credit:</strong> The FIRST plan item addresses the abnormal CMS — this is the correct clinical priority. ORIF is named and justified. The plan is numbered, sequenced by urgency, and includes admission reasoning. Six items = thorough coverage.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="w5-terms" class="case-sub">
+    <div class="case-header w5">
+      <div class="case-meta">Week 5 · Key Terms for SOAP Writing</div>
+      <h2>Terms You Need in This Note</h2>
+    </div>
+    <div class="case-body">
+      <div class="term-grid">
+        <div class="term-ref"><div class="term-name">FOOSH</div><div class="term-root">Fall On Outstretched Hand</div><div class="term-def">Classic mechanism for distal radius, scaphoid, and elbow fractures.</div><div class="term-clinical">Use in S: "Mechanism: FOOSH injury — landed with hands extended"</div></div>
+        <div class="term-ref"><div class="term-name">spiral fracture</div><div class="term-root">Greek: speira (coil)</div><div class="term-def">Helical fracture from rotational/torsional force. Wraps around the shaft.</div><div class="term-clinical">Use in O and A: "spiral fracture pattern at the distal diaphysis"</div></div>
+        <div class="term-ref"><div class="term-name">CMS check</div><div class="term-root">Circulation · Motion · Sensation</div><div class="term-def">Post-splint assessment of vascular and neural integrity distal to injury.</div><div class="term-clinical">Use in O: document all 3 components separately with findings</div></div>
+        <div class="term-ref"><div class="term-name">ecchymosis</div><div class="term-root">ek + chymos (blood out of juice)</div><div class="term-def">Bruising — discoloration from blood tracking under skin.</div><div class="term-clinical">Use in O: "ecchymosis over the distal radius"</div></div>
+        <div class="term-ref"><div class="term-name">crepitus</div><div class="term-root">Latin: crepitare (to rattle)</div><div class="term-def">Grating sensation from fractured bone ends. Assess once — do not reproduce.</div><div class="term-clinical">Use in O: "crepitus noted on initial assessment (not reproduced)"</div></div>
+        <div class="term-ref"><div class="term-name">ORIF</div><div class="term-root">Open Reduction Internal Fixation</div><div class="term-def">Surgery to realign and hold fracture fragments with hardware.</div><div class="term-clinical">Use in P: "ORIF likely indicated given displacement"</div></div>
+        <div class="term-ref"><div class="term-name">cortical bone</div><div class="term-root">cortic/o (outer layer)</div><div class="term-def">Dense outer shell of bone. Disruption on X-ray confirms fracture.</div><div class="term-clinical">Use in O: "cortical disruption confirmed on lateral view"</div></div>
+        <div class="term-ref"><div class="term-name">diaphysis</div><div class="term-root">dia + physis (through growth)</div><div class="term-def">The shaft of a long bone — where spiral fractures typically occur.</div><div class="term-clinical">Use in O: "spiral fracture at the distal diaphysis of the radius"</div></div>
+        <div class="term-ref"><div class="term-name">intra-articular</div><div class="term-root">intra- (within) + articular (joint)</div><div class="term-def">Fracture extending into the joint space — higher complication risk.</div><div class="term-clinical">Use in A if joint involved: "intra-articular extension on CT"</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ W6 ROM CASE ════════════════ -->
+<div id="w6" class="section-panel">
+  <div class="sub-nav">
+    <button class="sub-btn active" onclick="showSub('w6','scenario')">1. Read the Case</button>
+    <button class="sub-btn" onclick="showSub('w6','steps')">2. Step-by-Step</button>
+    <button class="sub-btn" onclick="showSub('w6','exemplar')">3. Full Exemplar</button>
+    <button class="sub-btn" onclick="showSub('w6','terms')">4. Key Terms</button>
+  </div>
+
+  <div id="w6-scenario" class="case-sub active">
+    <div class="case-header w6">
+      <div class="case-meta">Week 6 · Sports Medicine · Patient MRN-00891</div>
+      <h2>Jordan Kim, 16 NB</h2>
+      <p>Chief complaint: "My shoulder has been sore for weeks and now I can't raise my arm all the way. It happened during swim practice."</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>W6 SOAP notes are different:</span> This is a sports medicine progress note — not an emergency case. The focus shifts to ROM deficit documentation, functional limitation, and rehab planning.</div>
+      <div class="vignette-box w6">
+        <div class="vignette-label">Clinical Vignette — Sports Medicine Clinic</div>
+        <p>Jordan Kim is a <span class="highlight">16-year-old non-binary swimmer</span> presenting to the sports medicine clinic for evaluation of <span class="highlight">right shoulder pain, 3 weeks duration</span>. Pain began during swim practice with overhead freestyle stroke. Rates pain <span class="highlight">4/10 at rest, 7/10 with overhead activity</span>. Denies any acute traumatic event. Reports <span class="highlight">gradual onset with increasing stiffness</span>.</p>
+        <p style="margin-top:12px">Vital signs stable. Right shoulder exam: <span class="highlight">no edema or ecchymosis visible</span>. Tenderness to palpation over the <span class="highlight">supraspinatus tendon insertion</span>. Goniometric ROM assessment performed bilaterally using a standard goniometer:</p>
+        <p style="margin-top:10px;padding:10px 14px;background:rgba(26,79,42,0.07);border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;line-height:1.9;">
+          <strong>Shoulder Abduction:</strong> Right AROM 110° / Right PROM 140° · Left AROM 178° / Left PROM 180°<br>
+          <strong>Shoulder Flexion:</strong> Right AROM 120° / Right PROM 155° · Left AROM 175° / Left PROM 178°<br>
+          <strong>Shoulder External Rotation:</strong> Right AROM 50° / Right PROM 65° · Left AROM 85° / Left PROM 88°
+        </p>
+        <p style="margin-top:12px">Pain reproduced with <span class="highlight">resisted shoulder abduction</span>. <span class="highlight">Empty can test positive</span>. Biceps tendon intact. Neurovascular status intact bilaterally.</p>
+      </div>
+      <div style="background:var(--w6l);border-radius:10px;padding:18px 20px;font-size:0.85rem;line-height:1.7;border:0.5px solid rgba(26,79,42,0.15);">
+        <strong style="color:var(--w6)">What makes this case unique:</strong> You must document ROM using the correct format (AROM vs. PROM), calculate deficits by comparing to the contralateral side, and interpret what the AROM/PROM gap tells you clinically. The Plan for this case is a rehab protocol, not an emergency procedure.
+      </div>
+    </div>
+  </div>
+
+  <div id="w6-steps" class="case-sub">
+    <div class="case-header w6">
+      <div class="case-meta">Step-by-Step Guide · W6 ROM Case</div>
+      <h2>Building Your SOAP Note</h2>
+      <p>ROM cases require precise numbers and correct interpretation of the AROM vs. PROM gap.</p>
+    </div>
+    <div class="case-body">
+      <div class="tip-strip"><span>AROM vs. PROM rule:</span> If PROM > AROM, the joint CAN move (structure intact) but the patient CAN'T produce the motion actively — this means pain or muscle weakness, not a structural block.</div>
+
+      <div class="soap-step open">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter S">S</div>
+          <div class="step-info"><h4>Subjective</h4><p>Include onset, duration, activity context, and bilateral comparison</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>Who is the patient? Age, sex/gender identity.</li>
+            <li>How long has this been happening? Gradual or sudden?</li>
+            <li>What activity caused it? Be specific — overhead freestyle stroke.</li>
+            <li>Pain rating at rest AND with activity (this is different from trauma cases)</li>
+            <li>What makes it worse? What makes it better?</li>
+            <li>Any prior shoulder injuries?</li>
+          </ul>
+          <div class="extract-hint"><strong>Key for this S:</strong> Sports medicine SOAP notes capture the functional context — what activity provoked it, what movements are limited, how it affects their sport. Include "gradual onset" and "increasing stiffness" — these point toward overuse, not acute trauma.</div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter O">O</div>
+          <div class="step-info"><h4>Objective — ROM Table + Physical Findings</h4><p>Document AROM and PROM separately, calculate the deficit</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>Vital signs (stable for this case)</li>
+            <li>What does the shoulder look like? (No edema, no ecchymosis here — important to note)</li>
+            <li>Where is the tenderness? (Name the specific structure — supraspinatus tendon insertion)</li>
+            <li>ROM measurements — document as: Movement · AROM right/left · PROM right/left</li>
+            <li>What is the DEFICIT? (Compare right AROM to left AROM, and right PROM to left PROM)</li>
+            <li>What special tests were performed and what did they show?</li>
+          </ul>
+          <div class="extract-hint"><strong>How to calculate deficit:</strong> Abduction AROM: Right 110° vs. Left 178° = <strong>68° deficit</strong>. Abduction PROM: Right 140° vs. Left 180° = <strong>40° deficit</strong>. The gap between AROM (110°) and PROM (140°) = 30° — this tells you there's still structural mobility, but active muscle recruitment is limited by pain.</div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter A">A</div>
+          <div class="step-info"><h4>Assessment — Diagnosis + Clinical Interpretation</h4><p>Name the condition and explain what the ROM findings mean</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>What structure is likely injured? (Supraspinatus — part of the rotator cuff)</li>
+            <li>What is the clinical diagnosis? (Supraspinatus tendinitis / rotator cuff tendinopathy)</li>
+            <li>What does the AROM/PROM gap tell you about the nature of the limitation?</li>
+            <li>What does "positive empty can test" confirm?</li>
+          </ul>
+          <div class="extract-hint"><strong>Assessment logic:</strong> "Right supraspinatus tendinitis (rotator cuff tendinopathy) — overuse pattern consistent with repetitive overhead swimming. PROM exceeds AROM at all planes, indicating pain-limited active range rather than structural joint block. Supraspinatus involvement confirmed by positive empty can test and pain with resisted abduction."</div>
+        </div>
+      </div>
+
+      <div class="soap-step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-letter P">P</div>
+          <div class="step-info"><h4>Plan — Rehab Protocol + Activity Modification</h4><p>This plan is a rehab plan, not an emergency plan</p></div>
+          <div class="step-toggle">▶</div>
+        </div>
+        <div class="step-body">
+          <ul class="ask-list">
+            <li>What activity modifications are needed? (Modify swim training — no overhead work)</li>
+            <li>What PT/rehab interventions? (Eccentric strengthening, AROM exercises)</li>
+            <li>Pain management? (NSAIDs, ice)</li>
+            <li>When do they follow up? What are the return-to-sport criteria?</li>
+            <li>What do you warn them about? (Not pushing through pain)</li>
+          </ul>
+          <div class="extract-hint"><strong>Rehab plan language:</strong> Use "AROM exercises," "eccentric strengthening protocol," "activity modification," "return-to-sport criteria," "NSAIDs," and "follow-up in 4–6 weeks." Avoid emergency language (no IV lines, no ORIF, no admission) — this is an outpatient sports medicine visit.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="w6-exemplar" class="case-sub">
+    <div class="case-header w6">
+      <div class="case-meta">Annotated Exemplar · W6 ROM Case</div>
+      <h2>Model SOAP Note</h2>
+      <p>Notice how ROM is documented with bilateral comparisons and deficit calculations. Hover over terms.</p>
+    </div>
+    <div class="case-body">
+      <div class="exemplar-header">
+        <div class="exemplar-label">Patient: Jordan Kim · MRN-00891 · 16 NB · Sports Medicine</div>
+        <div class="quality-badge">IB Level 5–6 · Resident Quality</div>
+      </div>
+      <div class="soap-doc">
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag S">S</span><span>Subjective</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p>16-year-old non-binary competitive swimmer presents to sports medicine clinic with chief complaint: <em>"My shoulder has been sore for weeks and now I can't raise my arm all the way — it started during practice."</em> Gradual onset of right shoulder pain over 3 weeks, associated with repetitive overhead freestyle swimming. Pain rated 4/10 at rest, increasing to 7/10 with overhead activities. No acute traumatic event reported. Reports progressive stiffness and decreased ability to reach overhead. Activity worsens symptoms; rest provides partial relief. No prior shoulder injuries. No history of instability or dislocation.</p>
+            <div class="annotation"><strong>Why this S works:</strong> The mechanism is specific — "repetitive overhead freestyle swimming" — not just "sports injury." Pain is rated in two contexts: at rest and with activity. This is essential for sports medicine cases where pain varies by activity level.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag O">O</span><span>Objective</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p><strong>Vital Signs:</strong> Stable. T 98.4°F · BP 114/70 mmHg · HR 68 bpm · RR 16 breaths/min · O₂ sat 99%</p>
+            <p style="margin-top:10px"><strong>Shoulder Inspection:</strong> No visible edema or <span class="term-chip">ecchymosis<span class="term-tooltip">no bruising = no acute trauma · consistent with overuse mechanism</span></span>. No muscle <span class="term-chip">atrophy<span class="term-tooltip">a- (without) + troph/o (nourishment) · decreased muscle size from disuse</span></span> noted bilaterally.</p>
+            <p style="margin-top:10px"><strong>Palpation:</strong> Tenderness over the <span class="term-chip">supraspinatus<span class="term-tooltip">part of SITS rotator cuff · supraspinatus, infraspinatus, teres minor, subscapularis</span></span> tendon insertion at the greater tuberosity. Biceps tendon non-tender.</p>
+            <p style="margin-top:10px"><strong>Goniometric ROM Assessment (bilateral):</strong></p>
+            <table style="width:100%;font-size:0.82rem;border-collapse:collapse;margin-top:8px;">
+              <thead>
+                <tr style="background:var(--lgray);">
+                  <th style="padding:7px 10px;text-align:left;font-size:0.75rem;font-weight:600;border:0.5px solid var(--border);">Movement</th>
+                  <th style="padding:7px 10px;text-align:center;border:0.5px solid var(--border);">R AROM</th>
+                  <th style="padding:7px 10px;text-align:center;border:0.5px solid var(--border);">R PROM</th>
+                  <th style="padding:7px 10px;text-align:center;border:0.5px solid var(--border);">L AROM</th>
+                  <th style="padding:7px 10px;text-align:center;border:0.5px solid var(--border);">L PROM</th>
+                  <th style="padding:7px 10px;text-align:center;border:0.5px solid var(--border);color:var(--wrong);font-weight:600;">AROM Deficit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:7px 10px;border:0.5px solid var(--border);">Abduction</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">110°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">140°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">178°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">180°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);color:var(--wrong);font-weight:600;">68°</td></tr>
+                <tr style="background:var(--lgray);"><td style="padding:7px 10px;border:0.5px solid var(--border);">Flexion</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">120°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">155°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">175°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">178°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);color:var(--wrong);font-weight:600;">55°</td></tr>
+                <tr><td style="padding:7px 10px;border:0.5px solid var(--border);">External Rotation</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">50°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">65°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">85°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);">88°</td><td style="text-align:center;padding:7px 10px;border:0.5px solid var(--border);color:var(--wrong);font-weight:600;">35°</td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top:10px;font-size:0.85rem;"><strong>Special Tests:</strong> Empty can test positive right (pain with resisted <span class="term-chip">abduction<span class="term-tooltip">ab- (away) + duct/o (to lead) · movement away from body midline</span></span> in <span class="term-chip">pronation<span class="term-tooltip">Latin: pronare · forearm rotation so palm faces down</span></span>). Anterior apprehension test negative. Neurovascular status intact bilaterally.</p>
+            <div class="annotation"><strong>Why this O earns full credit:</strong> The ROM table shows AROM and PROM separately for both sides — this is the professional documentation format. The deficit column is calculated. AROM vs. PROM gap (e.g., 110° vs. 140° in abduction = 30° gap) tells the clinician the joint can passively achieve more range than the patient can actively produce, pointing to pain or muscle inhibition rather than a joint capsule restriction.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag A">A</span><span>Assessment</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <p>Right <span class="term-chip">supraspinatus<span class="term-tooltip">superior rotator cuff muscle · most commonly injured in shoulder impingement</span></span> <span class="term-chip">tendinitis<span class="term-tooltip">tendin/o (tendon) + -itis (inflammation) · tendon inflammation from overuse</span></span> — overuse pattern consistent with repetitive overhead swimming (<span class="term-chip">ROM deficit<span class="term-tooltip">documented difference in range compared to contralateral limb</span></span> right shoulder in all planes). PROM exceeds AROM at all measured planes — consistent with pain-limited active range rather than structural joint block or <span class="term-chip">contracture<span class="term-tooltip">Latin: contractura · permanent shortening of muscle/tendon limiting ROM</span></span>. Positive empty can test confirms supraspinatus involvement. No evidence of acute tear or instability at this time.</p>
+            <div class="annotation"><strong>Why this A works:</strong> Diagnosis is specific — not just "shoulder pain" but "right supraspinatus tendinitis." The AROM/PROM interpretation is explicit: PROM > AROM = pain-limited range, not structural block. Contracture is correctly ruled out because PROM is nearly normal.</div>
+          </div>
+        </div>
+        <div class="soap-row open">
+          <div class="soap-row-head" onclick="toggleSoapRow(this)">
+            <span class="soap-tag P">P</span><span>Plan</span><span class="toggle-icon">▶</span>
+          </div>
+          <div class="soap-content">
+            <ol style="padding-left:18px;font-size:0.88rem;line-height:2;">
+              <li><strong>Activity modification:</strong> Eliminate overhead freestyle swimming until follow-up. Substitute kick drills and non-overhead strokes. Avoid provocative <span class="term-chip">abduction<span class="term-tooltip">movement away from midline · the motion that reproduces pain</span></span> and overhead reaching.</li>
+              <li><strong>Physical therapy referral:</strong> Eccentric strengthening protocol targeting <span class="term-chip">SITS<span class="term-tooltip">Supraspinatus · Infraspinatus · Teres minor · Subscapularis · the four rotator cuff muscles</span></span> rotator cuff muscles. Progressive <span class="term-chip">AROM<span class="term-tooltip">Active Range of Motion · range achieved using patient's own muscle strength</span></span> exercises to restore functional motion. Scapular stabilization exercises included.</li>
+              <li><strong>Pain management:</strong> Ibuprofen 400mg PO q6h with food × 10 days. Ice 15 minutes post-activity.</li>
+              <li><strong>Imaging:</strong> If no improvement in 4–6 weeks, order MRI right shoulder to evaluate for partial rotator cuff tear.</li>
+              <li><strong>Return-to-sport criteria:</strong> Full pain-free AROM bilaterally symmetric. Strength ≥90% contralateral side. No pain with resisted abduction.</li>
+              <li><strong>Follow-up:</strong> Return in 4 weeks for repeat goniometric assessment and strength testing.</li>
+            </ol>
+            <div class="annotation"><strong>Why this P works:</strong> The plan is a rehab protocol — no emergency interventions. Return-to-sport criteria are specific and measurable (not just "when it feels better"). SITS is used correctly, AROM is used in the PT prescription. Imaging is held conditionally — clinically appropriate for a first-presentation overuse injury.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="w6-terms" class="case-sub">
+    <div class="case-header w6">
+      <div class="case-meta">Week 6 · Key Terms for SOAP Writing</div>
+      <h2>Terms You Need in This Note</h2>
+    </div>
+    <div class="case-body">
+      <div class="term-grid">
+        <div class="term-ref"><div class="term-name">AROM</div><div class="term-root">Active Range of Motion</div><div class="term-def">Range patient achieves using their own muscle strength.</div><div class="term-clinical">Use in O table: "R AROM abduction 110°"</div></div>
+        <div class="term-ref"><div class="term-name">PROM</div><div class="term-root">Passive Range of Motion</div><div class="term-def">Range achieved when the clinician moves the patient's limb.</div><div class="term-clinical">Use in O table: "R PROM abduction 140°"</div></div>
+        <div class="term-ref"><div class="term-name">ROM deficit</div><div class="term-root">Range Of Motion deficit</div><div class="term-def">Documented difference compared to normal or contralateral side.</div><div class="term-clinical">Use in O: "68° abduction deficit right vs. left"</div></div>
+        <div class="term-ref"><div class="term-name">abduction</div><div class="term-root">ab- (away) + duct/o (to lead)</div><div class="term-def">Movement away from body midline. Raising arm to the side.</div><div class="term-clinical">Use in O/A: "pain with resisted abduction"</div></div>
+        <div class="term-ref"><div class="term-name">tendinitis</div><div class="term-root">tendin/o + -itis (inflammation)</div><div class="term-def">Tendon inflammation from repetitive overuse.</div><div class="term-clinical">Use in A: "right supraspinatus tendinitis"</div></div>
+        <div class="term-ref"><div class="term-name">SITS</div><div class="term-root">Mnemonic: 4 rotator cuff muscles</div><div class="term-def">Supraspinatus, Infraspinatus, Teres minor, Subscapularis.</div><div class="term-clinical">Use in P: "eccentric strengthening of SITS rotator cuff"</div></div>
+        <div class="term-ref"><div class="term-name">atrophy</div><div class="term-root">a- (without) + troph/o (nourishment)</div><div class="term-def">Decrease in muscle size from disuse or injury.</div><div class="term-clinical">Use in O: "no atrophy noted" (or document if present)</div></div>
+        <div class="term-ref"><div class="term-name">contracture</div><div class="term-root">Latin: contractura</div><div class="term-def">Permanent shortening of muscle/tendon limiting ROM.</div><div class="term-clinical">Use in A to rule out: "no contracture — PROM nearly intact"</div></div>
+        <div class="term-ref"><div class="term-name">goniometer</div><div class="term-root">Greek: gonia (angle) + meter</div><div class="term-def">Instrument to measure joint angle in degrees.</div><div class="term-clinical">Use in O: "goniometric ROM assessment performed bilaterally"</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ COMMON MISTAKES ════════════════ -->
+<div id="mistakes" class="section-panel">
+  <div class="section-title">Common SOAP Note Mistakes</div>
+  <div class="section-sub">Side-by-side comparisons of what novice writers do vs. what clinical writers do. Study these before the exam.</div>
+
+  <div class="feedback-intro">
+    <h3>Why these mistakes happen</h3>
+    <p>You are not a clinician yet — and that's fine. Most SOAP note errors come from three habits: using everyday language instead of medical terms, putting information in the wrong section, and writing vague plans. This tab shows you the exact patterns to avoid.</p>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #1 — Wrong Section</div>
+    <h4>Putting objective findings in the Subjective section</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"S: The patient came in with blisters and redness on his arm and his blood pressure was 122/78."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"S: 17-year-old male presents with chief complaint: 'There are blisters everywhere and it burns.' Mechanism: grease splash to right forearm. Pain 8/10."</p>
+        <p style="margin-top:6px">"O: BP 122/78 mmHg. Erythema and blistering noted over dorsal right forearm."</p>
+      </div>
+    </div>
+    <div class="mistake-note">Rule: S = only what the patient SAYS. O = only what you SEE or MEASURE. Blood pressure is a measurement — it belongs in O. Blisters are a physical finding — also O. The patient's own words go in S.</div>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #2 — Plain English</div>
+    <h4>Writing everyday words where clinical terms are required</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"O: The wrist is really swollen and bruised. He can't move his fingers and his fingers feel a little numb."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"O: Significant edema and ecchymosis over the distal radius. CMS: C — cap refill 3 sec (delayed). M — patient unable to fully extend digits. S — paresthesia in thumb and index finger distribution."</p>
+      </div>
+    </div>
+    <div class="mistake-note">Plain English earns partial credit but caps your score at a maximum of 14/20. Replace: "swollen" → <em>edema</em> · "bruised" → <em>ecchymosis</em> · "numb" → <em>paresthesia</em> · "can't move fingers" → "motion deficient — unable to extend digits."</div>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #3 — Missing CMS Format</div>
+    <h4>Writing "CMS intact" without documenting the three components</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"O: CMS was checked and it was abnormal."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"O: Post-splint CMS: C — capillary refill 3 seconds (delayed, normal &lt;2 sec). M — patient unable to fully extend fingers. S — tingling in thumb and index finger (median nerve distribution)."</p>
+      </div>
+    </div>
+    <div class="mistake-note">CMS must always be documented as three named components with specific findings. "CMS abnormal" earns 0 points. You must state what is abnormal about each letter — C, M, and S — separately.</div>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #4 — Vague Assessment</div>
+    <h4>Naming the body part instead of the clinical diagnosis</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"A: The patient has a broken wrist."</p>
+        <p style="margin-top:6px">"A: 2nd degree burn."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"A: Closed spiral fracture, distal radius, with dorsal displacement. Post-splint CMS compromised — neurovascular concern."</p>
+        <p style="margin-top:6px">"A: 2nd degree (partial thickness) burn, right dorsal forearm, ~2% TBSA. 3rd degree excluded — no eschar, pain intact."</p>
+      </div>
+    </div>
+    <div class="mistake-note">The A section requires: diagnosis name + location + qualifier + your reasoning. Two words is never enough. The examiner wants to see that you can classify, locate, and justify — not just name.</div>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #5 — Plan Without Priorities</div>
+    <h4>Listing generic steps without addressing the most urgent finding first</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"P: 1. Give pain medicine. 2. Splint the wrist. 3. Tell patient to come back if it gets worse."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"P: 1. URGENT — bivalve splint immediately — CMS compromised. Reassess in 15 min. 2. CT wrist for surgical planning. 3. ORIF likely — ortho consult placed. 4. IV morphine for pain. 5. NPO — pre-op pending."</p>
+      </div>
+    </div>
+    <div class="mistake-note">The Plan must be prioritized. If something is urgent — abnormal CMS, high TBSA burn, open fracture — it goes FIRST. A plan that addresses pain before a neurovascular emergency would be considered clinically unsafe.</div>
+  </div>
+
+  <div class="mistake-card wrong">
+    <div class="mistake-label">Mistake #6 — Wrong AROM/PROM Interpretation</div>
+    <h4>Saying PROM > AROM means the joint is "stuck"</h4>
+    <div class="compare-row">
+      <div class="compare-box compare-bad">
+        <div class="compare-label">❌ Novice writer</div>
+        <p>"A: Patient has limited motion in the shoulder and cannot move it properly. The joint is stiff."</p>
+      </div>
+      <div class="compare-box compare-good">
+        <div class="compare-label">✓ Clinical writer</div>
+        <p>"A: PROM exceeds AROM at all planes (e.g., abduction PROM 140° vs. AROM 110°) — indicates pain-limited active range, not structural joint block or contracture. Passive motion is nearly preserved, confirming the joint can move when the patient's own muscle inhibition is removed."</p>
+      </div>
+    </div>
+    <div class="mistake-note">PROM > AROM = muscle/pain problem. If BOTH were severely limited, that would suggest a structural block or contracture. The gap between them is the clinically important finding — not just the numbers themselves.</div>
+  </div>
+
+  <div class="mistake-card right" style="margin-top:24px">
+    <div class="mistake-label">What Earns Full Credit</div>
+    <h4>The 8-term minimum — used correctly, not just listed</h4>
+    <p style="font-size:0.88rem;line-height:1.7;">Using 8 terms means using them in clinically correct sentences — not listing them at the bottom of the note. "Terms used: erythema, edema, dermis..." earns 0 points. The terms must appear naturally in your S, O, A, and P sections, applied to the actual clinical findings.</p>
+  </div>
+
+  <div class="mistake-card warn">
+    <div class="mistake-label">Exam-Day Reminder</div>
+    <h4>60 minutes total — Section D (SOAP note) = 10 minutes</h4>
+    <p style="font-size:0.88rem;line-height:1.7;">Budget your time. Spend 2 minutes reading the vignette carefully. Write S and O first — they are faster (direct from the case). Then A and P. If you're stuck on A, write your best assessment and move to P — don't leave P blank. An incomplete P is worth more than a perfect A with nothing after it.</p>
+  </div>
+</div>
+
+<!-- ════════════════ CHECKLIST ════════════════ -->
+<div id="checklist" class="section-panel">
+  <div class="section-title">Pre-Exam SOAP Note Checklist</div>
+  <div class="section-sub">Go through this the morning of your Boards exam. Check each item — if you can't, that's your last study target.</div>
+
+  <div class="checklist-wrap">
+    <h3 style="color:var(--w4)">🔥 Week 4 — Burn SOAP Skills</h3>
+    <div class="check-item"><input type="checkbox" id="c1"><label for="c1">I can stage a burn (1st–4th degree) using at least 2 clinical signs per degree — not just "has blisters"</label></div>
+    <div class="check-item"><input type="checkbox" id="c2"><label for="c2">I can calculate TBSA using Rule of Nines and write the percentage in my O section</label></div>
+    <div class="check-item"><input type="checkbox" id="c3"><label for="c3">I can write "no eschar identified" in my O section and explain in my A why this rules out 3rd degree</label></div>
+    <div class="check-item"><input type="checkbox" id="c4"><label for="c4">I can use erythema, edema, dermis, eschar, debridement, granulation, purulence, and TBSA in correct sentences</label></div>
+    <div class="check-item"><input type="checkbox" id="c5"><label for="c5">My burn Plan has at least 4 numbered items: wound care, pain, infection prevention, follow-up</label></div>
+  </div>
+
+  <div class="checklist-wrap">
+    <h3 style="color:var(--w5)">🦴 Week 5 — Fracture SOAP Skills</h3>
+    <div class="check-item"><input type="checkbox" id="c6"><label for="c6">I can classify a fracture using TWO descriptors: pattern (spiral, transverse, greenstick, comminuted, compression) + open or closed</label></div>
+    <div class="check-item"><input type="checkbox" id="c7"><label for="c7">I can document CMS as three named, separate items — not just "CMS intact"</label></div>
+    <div class="check-item"><input type="checkbox" id="c8"><label for="c8">I know that cap refill of 3 seconds is ABNORMAL (normal is under 2 seconds)</label></div>
+    <div class="check-item"><input type="checkbox" id="c9"><label for="c9">If CMS is abnormal, my Plan item #1 is always: loosen/bivalve the splint + reassess</label></div>
+    <div class="check-item"><input type="checkbox" id="c10"><label for="c10">I can use FOOSH, ecchymosis, crepitus, cortical bone, diaphysis, ORIF, spiral fracture, and CMS check correctly</label></div>
+  </div>
+
+  <div class="checklist-wrap">
+    <h3 style="color:var(--w6)">💪 Week 6 — ROM SOAP Skills</h3>
+    <div class="check-item"><input type="checkbox" id="c11"><label for="c11">I can document ROM in a bilateral table with AROM and PROM columns and a deficit column</label></div>
+    <div class="check-item"><input type="checkbox" id="c12"><label for="c12">I can explain what PROM > AROM means clinically (pain-limited, not structural block)</label></div>
+    <div class="check-item"><input type="checkbox" id="c13"><label for="c13">I can name the SITS muscles and use "supraspinatus tendinitis" in a correct Assessment sentence</label></div>
+    <div class="check-item"><input type="checkbox" id="c14"><label for="c14">My ROM Plan includes: activity modification, PT referral, return-to-sport criteria — not emergency interventions</label></div>
+    <div class="check-item"><input type="checkbox" id="c15"><label for="c15">I can use AROM, PROM, ROM deficit, abduction, tendinitis, SITS, atrophy, and goniometer correctly</label></div>
+  </div>
+
+  <div class="checklist-wrap">
+    <h3>All Cases — Universal SOAP Skills</h3>
+    <div class="check-item"><input type="checkbox" id="c16"><label for="c16">My S section always starts with: "[age]-year-old [sex] presents with chief complaint: [quote]"</label></div>
+    <div class="check-item"><input type="checkbox" id="c17"><label for="c17">My O section always has vital signs with units before physical exam findings</label></div>
+    <div class="check-item"><input type="checkbox" id="c18"><label for="c18">My A section always has a precise diagnosis + location + qualifier + brief reasoning (not just a name)</label></div>
+    <div class="check-item"><input type="checkbox" id="c19"><label for="c19">My P section has at least 4 numbered items and addresses the most urgent finding first</label></div>
+    <div class="check-item"><input type="checkbox" id="c20"><label for="c20">I have at least 8 Phase 2 terms used naturally in sentences — not listed at the bottom of the note</label></div>
+    <div class="check-item"><input type="checkbox" id="c21"><label for="c21">I have budgeted 10 minutes for the SOAP note section on exam day</label></div>
+  </div>
+
+  <div style="background:var(--navy);border-radius:12px;padding:20px 24px;color:#fff;margin-top:4px;">
+    <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;">Exam Day Scoring</div>
+    <p style="font-size:0.88rem;color:rgba(255,255,255,0.7);line-height:1.7;">Section D (SOAP note) = 20 points. Passing = 16/20. You are graded on: <strong style="color:#fff">medical terminology (use 8+ terms correctly)</strong>, completeness (all 4 sections present), organization (correct SOAP format), and clinical reasoning (plausible diagnosis + justified plan). Plain English throughout caps you at 14/20 maximum.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showTab(tab) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  const tabs = ['home','w4','w5','w6','mistakes','checklist'];
+  document.querySelectorAll('.tab-btn')[tabs.indexOf(tab)].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showSub(week, sub) {
+  const panel = document.getElementById(week);
+  panel.querySelectorAll('.case-sub').forEach(s => s.classList.remove('active'));
+  panel.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(week+'-'+sub).classList.add('active');
+  const subs = ['scenario','steps','exemplar','terms'];
+  panel.querySelectorAll('.sub-btn')[subs.indexOf(sub)].classList.add('active');
+}
+
+function toggleStep(head) {
+  head.closest('.soap-step').classList.toggle('open');
+}
+function toggleSoapRow(head) {
+  head.closest('.soap-row').classList.toggle('open');
+}
+
+// Save checklist to localStorage
+document.querySelectorAll('.check-item input').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const state = {};
+    document.querySelectorAll('.check-item input').forEach(c => state[c.id] = c.checked);
+    try { localStorage.setItem('dcith_soap_checklist', JSON.stringify(state)); } catch(e){}
+  });
+});
+
+// Load checklist
+try {
+  const saved = JSON.parse(localStorage.getItem('dcith_soap_checklist') || '{}');
+  Object.keys(saved).forEach(id => {
+    const cb = document.getElementById(id);
+    if (cb) cb.checked = saved[id];
+  });
+} catch(e){}
+</script>
+</body>
+</html>
